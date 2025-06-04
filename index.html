@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galli Galli </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="./logo.png.png" alt="Galli Galli Dokand Logo" class="logo-image">
+            <h1>Galli Galli Dokand </h1>
+        </div>
+        <div class="audio-player">
+            <audio id="bgMusic" src="d.mp3" loop></audio>
+            <button id="playPauseBtn" class="audio-btn">Play/Pause</button>
+            <button id="nextBtn" class="audio-btn">Next</button>
+        </div>
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="menu">Today's Menu</button>
+            <button class="tab-btn" data-tab="invoice">Invoice & Calculator</button>
+            <button class="tab-btn" data-tab="dues">Dues</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="menu" class="tab-content active">
+            <div class="menu-grid">
+                <!-- Menu items will be dynamically added here -->
+            </div>
+        </section>
+
+        <section id="invoice" class="tab-content">
+            <div class="calculator-container">
+                <div class="item-selection">
+                    <h2>Select Items</h2>
+                    <div class="items-list">
+                        <!-- Checkboxes will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="invoice-preview">
+                    <h2>Invoice Preview</h2>
+                    <div class="selected-items">
+                        <!-- Selected items will appear here -->
+                    </div>
+                    <div class="total-section">
+                        <h3>Total Amount: ₹<span id="total-amount">0</span></h3>
+                        <button id="generate-invoice" class="generate-btn">Generate Invoice</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dues" class="tab-content">
+            <div class="dues-container">
+                <div class="dues-header">
+                    <h2>Customer Management</h2>
+                    <div class="header-buttons">
+                        <!--<button id="add-customer-btn" class="secondary-btn">Add New Customer</button> -->
+                        <button id="export-data" class="secondary-btn">Export Report</button>
+                    </div>
+                </div>
+                
+                <!-- Add Customer Form (initially hidden) -->
+                <div id="add-customer-form" class="customer-form" style="display: none;">
+                    <h3>Add New Customer</h3>
+                    <form id="customer-form">
+                        <div class="form-group">
+                            <label for="customer-name">Customer Name</label>
+                            <input type="text" id="customer-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="due-amount">Due Amount (₹)</label>
+                            <input type="number" id="due-amount" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="submit-btn">Add Customer</button>
+                            <button type="button" id="cancel-add-customer" class="cancel-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Customer List View -->
+                <div class="customer-list-container">
+                    <div class="filters">
+                        <input type="text" id="customer-search" placeholder="Search customers...">
+                        <select id="sort-by">
+                            <option value="name">Sort by Name</option>
+                            <option value="amount">Sort by Amount</option>
+                            <option value="date">Sort by Latest Due</option>
+                        </select>
+                    </div>
+                    
+                    <div class="customer-table-container">
+                        <table class="customer-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Total Due Amount (₹)</th>
+                                    <th>Last Transaction</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customer-list">
+                                <!-- Customers will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="invoice-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Invoice</h2>
+                <div id="invoice-details"></div>
+                <div class="modal-footer">
+                    <button id="print-invoice">Print Invoice</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Details Modal -->
+        <div id="customer-modal" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modal-customer-name">Customer Details</h2>
+                    <div class="customer-summary">
+                        <span>Total Due: ₹<span id="modal-total-due">0</span></span>
+                        <button id="print-customer-dues" class="secondary-btn">Print Dues</button>
+                    </div>
+                </div>
+                <div class="vouchers-by-date">
+                    <!-- Vouchers grouped by date will be added here -->
+                </div>
+            </div>
+        </div>
+
+        <section id="bug-report" class="bug-report-section">
+            <h2 class="bug-report-title">🛠️ Help Us Improve – Report Any Issues</h2>
+            <div class="bug-report-content">
+                <p>Dear Visitor,</p>
+                <p>Thank you for visiting our website: 
+                    <a href="https://didwmsabargayary.github.io/FST-WEB/" target="_blank">👉 FST-WEB</a>
+                </p>
+                <p>We are continuously working to improve the quality, performance, and user experience of this platform. Despite our efforts, occasional bugs or glitches may occur.</p>
+                <p>If you come across any technical issue, unexpected behavior, visual error, or anything that doesn't seem quite right, we would greatly appreciate it if you could report the problem directly to us.</p>
+                <p>Your feedback is extremely valuable and helps us maintain a smooth and error-free experience for everyone.</p>
+                <p>When reporting a bug, please include the following (if possible):</p>
+                <ul>
+                    <li>A short description of the issue</li>
+                    <li>The page or section where you noticed it</li>
+                    <li>Any visible error messages</li>
+                    <li>The device, browser, and operating system you're using</li>
+                </ul>
+                <p>You can report bugs by emailing us at:</p>
+                <p class="email-link">📩 <a href="mailto:didwmsaxander61@gmail.com">didwmsaxander61@gmail.com</a></p>
+                <p>Every report is reviewed with care, and necessary fixes are implemented as quickly as possible. Thank you for supporting us and helping make this website better for all users.</p>
+                <p>Warm regards,<br>The Website Owner<br><a href="https://didwmsabargayary.github.io/FST-WEB/" target="_blank">👉 FST-WEB</a></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
