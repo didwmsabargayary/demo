@@ -317,34 +317,65 @@ function formatDate(dateString) {
 
 // Initialize menu grid
 function initializeMenu() {
-    menuGrid.innerHTML = menuItems.map(item => `
-        <div class="menu-item">
+    const menuGrid = document.querySelector('.menu-grid');
+    menuGrid.innerHTML = '';
+    
+    menuItems.forEach(item => {
+        const menuItem = document.createElement('div');
+        menuItem.className = 'menu-item';
+        menuItem.innerHTML = `
             <img src="${item.image}" alt="${item.name}">
             <h3>${item.name}</h3>
-            <p class="price">₹${item.price}</p>
-        </div>
-    `).join('');
+            <p class="price">₹${item.price.toFixed(2)}</p>
+        `;
+        menuGrid.appendChild(menuItem);
+    });
 }
 
-// Initialize item selection list
+// Function to initialize items list for invoice
 function initializeItemsList() {
-    itemsList.innerHTML = menuItems.map(item => `
-        <div class="item-checkbox">
-            <input type="checkbox" id="item-${item.id}" data-id="${item.id}" data-price="${item.price}">
-            <label for="item-${item.id}">${item.name} - ₹${item.price}</label>
-            <input type="number" class="quantity-input" min="1" value="1" disabled>
-        </div>
-    `).join('');
+    const itemsList = document.querySelector('.items-list');
+    if (!itemsList) return;
+    
+    itemsList.innerHTML = '';
+    menuItems.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item-checkbox';
+        itemDiv.innerHTML = `
+            <input type="checkbox" id="item-${item.id}" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
+            <label for="item-${item.id}">${item.name} - ₹${item.price.toFixed(2)}</label>
+            <input type="number" class="quantity-input" value="1" min="1" style="display: none;">
+        `;
+        itemsList.appendChild(itemDiv);
+
+        const checkbox = itemDiv.querySelector('input[type="checkbox"]');
+        const quantityInput = itemDiv.querySelector('.quantity-input');
+
+        checkbox.addEventListener('change', function() {
+            quantityInput.style.display = this.checked ? 'inline-block' : 'none';
+            updateSelectedItems();
+        });
+
+        quantityInput.addEventListener('input', updateSelectedItems);
+    });
 }
 
-// Tab switching functionality
-tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-        
-        button.classList.add('active');
-        document.getElementById(button.dataset.tab).classList.add('active');
+// Initialize dues when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMenu();
+    initializeItemsList();
+    initializeData();
+    
+    // Add tab switching functionality
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            button.classList.add('active');
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
     });
 });
 
@@ -398,66 +429,90 @@ function displaySelectedItems(items) {
 
 // Generate and display invoice
 generateInvoiceBtn.addEventListener('click', () => {
-    const items = [];
-    let total = 0;
+    try {
+        const items = [];
+        let total = 0;
 
-    itemsList.querySelectorAll('.item-checkbox').forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (checkbox.checked) {
-            const quantity = parseInt(item.querySelector('.quantity-input').value);
-            const price = parseInt(checkbox.dataset.price);
-            const itemTotal = quantity * price;
-            
-            items.push({
-                name: checkbox.nextElementSibling.textContent.split(' - ')[0],
-                quantity,
-                price,
-                total: itemTotal
-            });
-            
-            total += itemTotal;
+        // Check if any items are selected
+        const selectedCheckboxes = itemsList.querySelectorAll('input[type="checkbox"]:checked');
+        if (selectedCheckboxes.length === 0) {
+            alert('Please select at least one item to generate an invoice.');
+            return;
         }
-    });
 
-    const invoiceHTML = `
-        <div class="invoice-content">
-            <h3> Galli Galli Dokand</h3>
-            <p>Date: ${new Date().toLocaleDateString()}</p>
-            <p>Time: ${new Date().toLocaleTimeString()}</p>
-            <hr>
-            <table style="width: 100%; margin-top: 1rem;">
-                <thead>
-                    <tr>
-                        <th style="text-align: left;">Item</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th style="text-align: right;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${items.map(item => `
+        itemsList.querySelectorAll('.item-checkbox').forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox.checked) {
+                const quantityInput = item.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value) || 0;
+                
+                if (quantity <= 0) {
+                    throw new Error(`Please enter a valid quantity for ${checkbox.dataset.name}`);
+                }
+
+                const price = parseInt(checkbox.dataset.price);
+                const itemTotal = quantity * price;
+                
+                items.push({
+                    name: checkbox.dataset.name,
+                    quantity,
+                    price,
+                    total: itemTotal
+                });
+                
+                total += itemTotal;
+            }
+        });
+
+        const invoiceHTML = `
+            <div class="invoice-content" style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="./logo.png.png" alt="Galli Galli Dokand Logo" style="max-width: 100px; height: auto; margin-bottom: 10px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">Galli Galli Dokand</h3>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <p>Date: ${new Date().toLocaleDateString()}</p>
+                    <p>Time: ${new Date().toLocaleTimeString()}</p>
+                </div>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
                         <tr>
-                            <td>${item.name}</td>
-                            <td style="text-align: center;">${item.quantity}</td>
-                            <td style="text-align: center;">₹${item.price}</td>
-                            <td style="text-align: right;">₹${item.total}</td>
+                            <th style="text-align: left; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Item</th>
+                            <th style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Qty</th>
+                            <th style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Price</th>
+                            <th style="text-align: right; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Total</th>
                         </tr>
-                    `).join('')}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
-                        <td style="text-align: right;"><strong>₹${total}</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-            <hr>
-            <p style="text-align: center; margin-top: 1rem;">Thank you for your business!</p>
-        </div>
-    `;
+                    </thead>
+                    <tbody>
+                        ${items.map(item => `
+                            <tr>
+                                <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">${item.name}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
+                                <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">₹${item.price}</td>
+                                <td style="text-align: right; padding: 10px; border: 1px solid #ddd;">₹${item.total}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; padding: 10px; border: 1px solid #ddd;"><strong>Total:</strong></td>
+                            <td style="text-align: right; padding: 10px; border: 1px solid #ddd;"><strong>₹${total}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>Thank you for your business!</p>
+                </div>
+            </div>
+        `;
 
-    invoiceDetails.innerHTML = invoiceHTML;
-    modal.style.display = 'block';
+        invoiceDetails.innerHTML = invoiceHTML;
+        modal.style.display = 'block';
+    } catch (error) {
+        alert(error.message || 'An error occurred while generating the invoice.');
+    }
 });
 
 // Modal close functionality
@@ -471,16 +526,51 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// Print invoice
+// Print invoice functionality
 printInvoiceBtn.addEventListener('click', () => {
-    const printWindow = window.open('', '', 'width=800,height=600');
-    printWindow.document.write('<html><head><title>Invoice - Swima Oma Dokand</title>');
-    printWindow.document.write('<style>body { font-family: Arial, sans-serif; padding: 20px; }</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(invoiceDetails.innerHTML);
-    printWindow.document.write('</body></html>');
+    const printWindow = window.open('', '_blank');
+    const modalContent = modal.querySelector('.modal-content');
+    const invoiceContent = modalContent.querySelector('.invoice-content').cloneNode(true);
+    
+    const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Invoice - Galli Galli Dokand</title>
+            <style>
+                @page {
+                    size: A4;
+                    margin: 1cm;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    margin: 0;
+                    padding: 0;
+                }
+                @media print {
+                    body {
+                        width: 100%;
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${invoiceContent.outerHTML}
+            <script>
+                window.onload = () => {
+                    window.print();
+                    setTimeout(() => window.close(), 500);
+                };
+            </script>
+        </body>
+        </html>
+    `;
+
+    printWindow.document.write(printContent);
     printWindow.document.close();
-    printWindow.print();
 });
 
 // Delete customer function
@@ -614,17 +704,59 @@ const nextBtn = document.getElementById('nextBtn');
 const musicFiles = ['d.mp3'];
 let currentTrackIndex = 0;
 
-// Auto play music when page loads
-window.addEventListener('load', () => {
-    bgMusic.play().catch(error => {
-        console.log('Auto-play prevented:', error);
-    });
+// Function to attempt playing music
+function tryPlayMusic() {
+    if (!bgMusic) {
+        console.error('Audio element not found!');
+        return;
+    }
+
+    // Check if the audio file is actually loaded
+    if (bgMusic.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+        console.error('Audio file not found or cannot be loaded!');
+        return;
+    }
+
+    bgMusic.muted = false;
+    bgMusic.volume = 1;
+
+    // Load the audio file if not loaded
+    if (bgMusic.readyState === 0) {
+        bgMusic.load();
+    }
+
+    const playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.error('Playback failed:', error);
+            // Try to play again on next user interaction
+            document.addEventListener('click', tryPlayMusic, { once: true });
+        });
+    }
+}
+
+// Try to play when audio is loaded
+bgMusic.addEventListener('loadeddata', () => {
+    console.log('Audio file loaded successfully');
+    tryPlayMusic();
+});
+
+// Try to play music on various events
+document.addEventListener('DOMContentLoaded', tryPlayMusic);
+window.addEventListener('load', tryPlayMusic);
+document.addEventListener('click', tryPlayMusic);
+document.addEventListener('keydown', tryPlayMusic);
+document.addEventListener('touchstart', tryPlayMusic);
+
+// Add error handling for audio loading
+bgMusic.addEventListener('error', (e) => {
+    console.error('Audio loading error:', e.target.error);
 });
 
 // Play/Pause button functionality
 playPauseBtn.addEventListener('click', () => {
     if (bgMusic.paused) {
-        bgMusic.play();
+        tryPlayMusic();
     } else {
         bgMusic.pause();
     }
@@ -634,7 +766,7 @@ playPauseBtn.addEventListener('click', () => {
 nextBtn.addEventListener('click', () => {
     currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
     bgMusic.src = musicFiles[currentTrackIndex];
-    bgMusic.play();
+    tryPlayMusic();
 });
 
 // Update play/pause button text based on audio state
