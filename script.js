@@ -465,45 +465,47 @@ generateInvoiceBtn.addEventListener('click', () => {
         });
 
         const invoiceHTML = `
-            <div class="invoice-content" style="padding: 20px; max-width: 800px; margin: 0 auto;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="./logo.png.png" alt="Galli Galli Dokand Logo" style="max-width: 100px; height: auto; margin-bottom: 10px;">
-                    <h3 style="color: #333; margin-bottom: 10px;">Galli Galli Dokand</h3>
+            <div class="invoice-content" style="padding: 15px; max-width: 100%; margin: 0 auto; font-size: 14px;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="./logo.png.png" alt="Galli Galli Dokand Logo" style="max-width: 80px; height: auto; margin-bottom: 8px;">
+                    <h3 style="color: #333; margin-bottom: 8px; font-size: 18px;">Galli Galli Dokand</h3>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <p>Date: ${new Date().toLocaleDateString()}</p>
-                    <p>Time: ${new Date().toLocaleTimeString()}</p>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 8px;">
+                    <p style="margin: 0;">Date: ${new Date().toLocaleDateString()}</p>
+                    <p style="margin: 0;">Time: ${new Date().toLocaleTimeString()}</p>
                 </div>
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                    <thead>
-                        <tr>
-                            <th style="text-align: left; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Item</th>
-                            <th style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Qty</th>
-                            <th style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Price</th>
-                            <th style="text-align: right; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${items.map(item => `
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0;">
+                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0; min-width: 300px;">
+                        <thead>
                             <tr>
-                                <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">${item.name}</td>
-                                <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
-                                <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">₹${item.price}</td>
-                                <td style="text-align: right; padding: 10px; border: 1px solid #ddd;">₹${item.total}</td>
+                                <th style="text-align: left; padding: 8px; background-color: #f0f0f0; border: 1px solid #ddd; font-size: 14px;">Item</th>
+                                <th style="text-align: center; padding: 8px; background-color: #f0f0f0; border: 1px solid #ddd; font-size: 14px;">Qty</th>
+                                <th style="text-align: center; padding: 8px; background-color: #f0f0f0; border: 1px solid #ddd; font-size: 14px;">Price</th>
+                                <th style="text-align: right; padding: 8px; background-color: #f0f0f0; border: 1px solid #ddd; font-size: 14px;">Total</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" style="text-align: right; padding: 10px; border: 1px solid #ddd;"><strong>Total:</strong></td>
-                            <td style="text-align: right; padding: 10px; border: 1px solid #ddd;"><strong>₹${total}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 15px 0;">
-                <div style="text-align: center; margin-top: 30px;">
-                    <p>Thank you for your business!</p>
+                        </thead>
+                        <tbody>
+                            ${items.map(item => `
+                                <tr>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; font-size: 14px;">${item.name}</td>
+                                    <td style="text-align: center; padding: 8px; border: 1px solid #ddd; font-size: 14px;">${item.quantity}</td>
+                                    <td style="text-align: center; padding: 8px; border: 1px solid #ddd; font-size: 14px;">₹${item.price}</td>
+                                    <td style="text-align: right; padding: 8px; border: 1px solid #ddd; font-size: 14px;">₹${item.total}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd; font-weight: bold; font-size: 14px;">Total:</td>
+                                <td style="text-align: right; padding: 8px; border: 1px solid #ddd; font-weight: bold; font-size: 14px;">₹${total}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0;">
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="font-size: 14px;">Thank you for your business!</p>
                 </div>
             </div>
         `;
@@ -536,6 +538,7 @@ printInvoiceBtn.addEventListener('click', () => {
         <!DOCTYPE html>
         <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
             <title>Invoice - Galli Galli Dokand</title>
             <style>
                 @page {
@@ -547,12 +550,34 @@ printInvoiceBtn.addEventListener('click', () => {
                     line-height: 1.6;
                     margin: 0;
                     padding: 0;
+                    font-size: 14px;
+                }
+                @media screen {
+                    body {
+                        padding: 15px;
+                    }
+                    .invoice-content {
+                        max-width: 100%;
+                        margin: 0 auto;
+                    }
+                }
+                @media screen and (min-width: 768px) {
+                    body {
+                        padding: 30px;
+                        font-size: 16px;
+                    }
+                    .invoice-content {
+                        max-width: 800px;
+                    }
                 }
                 @media print {
                     body {
                         width: 100%;
                         margin: 0;
                         padding: 0;
+                    }
+                    .invoice-content {
+                        page-break-inside: avoid;
                     }
                 }
             </style>
@@ -703,6 +728,7 @@ const nextBtn = document.getElementById('nextBtn');
 // List of music files
 const musicFiles = ['d.mp3'];
 let currentTrackIndex = 0;
+let isPlaying = false;
 
 // Function to attempt playing music
 function tryPlayMusic() {
@@ -727,38 +753,41 @@ function tryPlayMusic() {
 
     const playPromise = bgMusic.play();
     if (playPromise !== undefined) {
-        playPromise.catch(error => {
-            console.error('Playback failed:', error);
-            // Try to play again on next user interaction
-            document.addEventListener('click', tryPlayMusic, { once: true });
-        });
+        playPromise
+            .then(() => {
+                isPlaying = true;
+                updatePlayPauseButton();
+            })
+            .catch(error => {
+                console.error('Playback failed:', error);
+                isPlaying = false;
+                updatePlayPauseButton();
+            });
     }
 }
 
-// Try to play when audio is loaded
-bgMusic.addEventListener('loadeddata', () => {
-    console.log('Audio file loaded successfully');
-    tryPlayMusic();
-});
+// Function to pause music
+function pauseMusic() {
+    if (!bgMusic) return;
+    bgMusic.pause();
+    isPlaying = false;
+    updatePlayPauseButton();
+}
 
-// Try to play music on various events
-document.addEventListener('DOMContentLoaded', tryPlayMusic);
-window.addEventListener('load', tryPlayMusic);
-document.addEventListener('click', tryPlayMusic);
-document.addEventListener('keydown', tryPlayMusic);
-document.addEventListener('touchstart', tryPlayMusic);
-
-// Add error handling for audio loading
-bgMusic.addEventListener('error', (e) => {
-    console.error('Audio loading error:', e.target.error);
-});
+// Function to update play/pause button text
+function updatePlayPauseButton() {
+    if (!playPauseBtn) return;
+    playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+}
 
 // Play/Pause button functionality
 playPauseBtn.addEventListener('click', () => {
-    if (bgMusic.paused) {
-        tryPlayMusic();
+    if (!bgMusic) return;
+    
+    if (isPlaying) {
+        pauseMusic();
     } else {
-        bgMusic.pause();
+        tryPlayMusic();
     }
 });
 
@@ -766,14 +795,35 @@ playPauseBtn.addEventListener('click', () => {
 nextBtn.addEventListener('click', () => {
     currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
     bgMusic.src = musicFiles[currentTrackIndex];
-    tryPlayMusic();
+    if (isPlaying) {
+        tryPlayMusic();
+    }
 });
 
 // Update play/pause button text based on audio state
 bgMusic.addEventListener('play', () => {
-    playPauseBtn.textContent = 'Pause';
+    isPlaying = true;
+    updatePlayPauseButton();
 });
 
 bgMusic.addEventListener('pause', () => {
-    playPauseBtn.textContent = 'Play';
+    isPlaying = false;
+    updatePlayPauseButton();
+});
+
+bgMusic.addEventListener('ended', () => {
+    isPlaying = false;
+    updatePlayPauseButton();
+});
+
+// Try to play music on various events
+document.addEventListener('DOMContentLoaded', () => {
+    updatePlayPauseButton();
+});
+
+// Add error handling for audio loading
+bgMusic.addEventListener('error', (e) => {
+    console.error('Audio loading error:', e.target.error);
+    isPlaying = false;
+    updatePlayPauseButton();
 });

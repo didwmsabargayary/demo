@@ -2,12 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Galli Galli </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Mobile-first styles */
+        @media screen and (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr !important;
+                padding: 1rem !important;
+            }
+            
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+                gap: 1rem !important;
+                padding: 1rem !important;
+            }
+            
+            .item-selection, .invoice-preview {
+                padding: 1rem !important;
+            }
+            
+            .logo-container h1 {
+                font-size: 1.5rem !important;
+            }
+            
+            .tabs {
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+            
+            .tab-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+            }
+            
+            .customer-table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .customer-table {
+                font-size: 0.9rem !important;
+            }
+            
+            .modal-content {
+                width: 95% !important;
+                padding: 1rem !important;
+                margin: 5% auto !important;
+            }
+            
+            .invoice-table {
+                font-size: 0.9rem !important;
+            }
+            
+            .invoice-table th,
+            .invoice-table td {
+                padding: 0.5rem !important;
+            }
+            
+            .quantity-input {
+                width: 50px !important;
+                padding: 0.2rem !important;
+            }
+            
+            .menu-item img {
+                height: 120px !important;
+            }
+            
+            .menu-item h3 {
+                font-size: 1rem !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -16,11 +86,11 @@
             <h1>Galli Galli Dokand </h1>
         </div>
         <div class="audio-player">
-            <audio id="bgMusic" loop autoplay preload="auto" muted>
+            <audio id="bgMusic" loop preload="auto">
                 <source src="./d.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
-            <button id="playPauseBtn" class="audio-btn">Play/Pause</button>
+            <button id="playPauseBtn" class="audio-btn">Play</button>
             <button id="nextBtn" class="audio-btn">Next</button>
         </div>
         <nav class="tabs">
