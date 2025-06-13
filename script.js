@@ -5,14 +5,16 @@ const menuItems = [
     { id: 15, name: 'Biscuit (बिस्कुट)', price: 15, image: 'bis.jpeg' },
     { id: 10, name: 'Papor (पापोर)', price: 5, image: 'papor.jpeg' },
     { id: 4, name: 'Guguni (गुगुनी)', price: 10, image: 'guguni.jpeg' },
-    { id: 8, name: 'Roti (रोटी)', price: 10, image: 'roti.webp' },
+    { id: 16, name: 'Jhal Muri (जाल मुरि)', price: 10, image: 'JH.jpeg' },
+    //{ id: 3, name: 'Porota (परोठा)', price: 20, image: 'porota.jpg' },
     { id: 7, name: 'Pan Egg (दावदै)', price: 15, image: 'egg.jpeg' },
     { id: 9, name: 'Maggi (मेगि)', price: 20, image: 'Maggi.jpg' },
     { id: 6, name: 'Water Bottle (दै बोतल)', price: 10, image: 'water.jpeg' },
     //{ id: 3, name: 'Porota (परोठा)', price: 20, image: 'porota.jpg' },
     { id: 5, name: 'Cigarette (चिगरेट)', price: 10, image: 'ch.jpg' },
-              
-    { id: 11, name: 'Pan (गय पाथै)', price: 5, image: 'goy.jpeg' }
+    // { id: 8, name: 'Roti (रोटी)', price: 10, image: 'roti.webp' },         
+    { id: 11, name: 'Pan (गय पाथै)', price: 5, image: 'goy.jpeg' },
+    { id: 15, name: 'Imli Kick', price: 1, image: 'em.jpeg' }
     //{ id: 12, name: 'Puri (पुरी)', price: 10, image: 'puri.jpg' },
    // { id: 13, name: 'Sugar Cane Juice (खुसेर बिदै)', price: 20, image: 'suger.jpg' }
    // { id: 14, name: 'Chow Mein (चाउ मेन)', price: 60, image: 'R.jpg' },
@@ -506,6 +508,9 @@ generateInvoiceBtn.addEventListener('click', () => {
                 <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0;">
                 <div style="text-align: center; margin-top: 20px;">
                     <p style="font-size: 14px;">Thank you for your business!</p>
+                    <div style="margin-top: 15px;">
+                        <button id="upi-payment-btn" class="upi-btn" onclick="initiateUPIPayment(${total})">Pay with UPI</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -827,3 +832,17 @@ bgMusic.addEventListener('error', (e) => {
     isPlaying = false;
     updatePlayPauseButton();
 });
+
+// Add UPI payment function
+function initiateUPIPayment(amount) {
+    // Replace 'your-upi-id' with your actual UPI ID
+    const upiId = '9864728992@okbizaxis';
+    const merchantName = 'Galli Galli Dokand';
+    const transactionNote = 'Payment for purchase';
+    
+    // Create UPI URL
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&tr=${Date.now()}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+    
+    // Open UPI payment
+    window.location.href = upiUrl;
+}
